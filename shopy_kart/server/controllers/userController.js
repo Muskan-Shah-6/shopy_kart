@@ -18,11 +18,11 @@ const createUser = asyncHandler(async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashPassword = await bcrypt.hash(password, salt)
     // Create new users.
-    const newUser = new User({ username, email, password:hashPassword })
+    const newUser = new User({ username, email, password: hashPassword })
 
     try {
         await newUser.save()
-        createToken(res, newUser._id); 
+        createToken(res, newUser._id);
         res.status(201).json({
             _id: newUser._id,
             username: newUser.username,
@@ -36,4 +36,26 @@ const createUser = asyncHandler(async (req, res) => {
     }
 })
 
-export { createUser };
+// LOgin user
+
+const loginUser = asyncHandler(async (req, res) => {
+    const { email, password } = req.body
+    const existingUser = await User.findOne({ email })
+
+    if (existingUser) {
+        const isPasswordValid = await bcrypt.compare(password, existingUser.password)
+
+        if (isPasswordValid) {
+            createToken(res, existingUser._id)
+
+            res.status(201).json({
+                _id: existingUser._id,
+                username: existingUser.username,
+                email: existingUser.email,
+                isAdmin: existingUser.isAdmin,
+            });
+            return;
+        }
+    }
+})
+export { createUser, loginUser };
