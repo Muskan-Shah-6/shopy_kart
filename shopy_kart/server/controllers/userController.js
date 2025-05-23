@@ -55,7 +55,19 @@ const loginUser = asyncHandler(async (req, res) => {
                 isAdmin: existingUser.isAdmin,
             });
             return;
+        }else{
+            res.status(400).json({
+                message:"Password is invalid"
+            })
         }
     }
 })
-export { createUser, loginUser };
+
+const logoutCurrentUser = asyncHandler(async (req, res) =>{
+    res.cookie('jwt','',{
+        httpOnly : true,
+        expires: new Date(0)
+    });
+     res.status(200).json({message:"Logged Out Successfully..!"})
+})
+export { createUser, loginUser , logoutCurrentUser};
