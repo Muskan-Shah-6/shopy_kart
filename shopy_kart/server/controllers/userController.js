@@ -55,11 +55,7 @@ const loginUser = asyncHandler(async (req, res) => {
                 isAdmin: existingUser.isAdmin,
             });
             return;
-        }else{
-            res.status(400).json({
-                message:"Password is invalid"
-            })
-        }
+        } 
     }
 })
 
@@ -70,4 +66,9 @@ const logoutCurrentUser = asyncHandler(async (req, res) =>{
     });
      res.status(200).json({message:"Logged Out Successfully..!"})
 })
-export { createUser, loginUser , logoutCurrentUser};
+
+const getAllusers = asyncHandler(async (req, res) =>{
+    const users = await User.find({});
+    res.json(users)
+})
+export { createUser, loginUser , logoutCurrentUser,getAllusers};
