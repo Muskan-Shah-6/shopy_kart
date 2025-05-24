@@ -24,7 +24,7 @@ const createUser = asyncHandler(async (req, res) => {
         await newUser.save()
         createToken(res, newUser._id);
         res.status(201).json({
-            message: "User created successfully",
+            message: "User Registered successfully",
             data: {
                 _id: newUser._id,
                 username: newUser.username,
@@ -176,6 +176,7 @@ const updateUserById = asyncHandler(async (req, res) => {
     if (user) {
         user.username = req.body.username || user.username,
         user.email = req.body.email || user.email
+        user.isAdmin = Boolean(req.body.isAdmin)
 
         const updateUserByAdmin = await user.save()
 
