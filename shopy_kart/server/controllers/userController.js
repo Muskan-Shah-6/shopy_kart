@@ -155,14 +155,12 @@ const deleteUserById = asyncHandler(async (req, res) => {
 })
 
 const getUserById = asyncHandler(async (req, res) => {
-    const user = await User.findById(req.params.id)
+    const user = await User.findById(req.params.id).select('-password')
     if (user) {
         res.status(200).json({
             message: "User fetched successfully",
             data: {
-                _id: user._id,
-                username: user.username,
-                email: user.email
+                user
             }
         })
     } else {
