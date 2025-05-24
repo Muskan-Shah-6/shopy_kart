@@ -24,10 +24,13 @@ const createUser = asyncHandler(async (req, res) => {
         await newUser.save()
         createToken(res, newUser._id);
         res.status(201).json({
-            _id: newUser._id,
-            username: newUser.username,
-            email: newUser.email,
-            isAdmin: newUser.isAdmin,
+            message: "User created successfully",
+            data: {
+                _id: newUser._id,
+                username: newUser.username,
+                email: newUser.email,
+                isAdmin: newUser.isAdmin,
+            }
         });
 
     } catch (error) {
@@ -43,20 +46,32 @@ const loginUser = asyncHandler(async (req, res) => {
     const existingUser = await User.findOne({ email })
 
     if (existingUser) {
-        const isPasswordValid = await bcrypt.compare(password, existingUser.password)
+        const isPasswordValid = await bcrypt.compare(password, existingUser.password);
 
         if (isPasswordValid) {
-            createToken(res, existingUser._id)
+            createToken(res, existingUser._id);
 
-            res.status(201).json({
-                _id: existingUser._id,
-                username: existingUser.username,
-                email: existingUser.email,
-                isAdmin: existingUser.isAdmin,
+            res.status(200).json({
+                message: "User logged in successfully",
+                data: {
+                    _id: existingUser._id,
+                    username: existingUser.username,
+                    email: existingUser.email,
+                    isAdmin: existingUser.isAdmin,
+                }
             });
             return;
+        } else {
+            res.status(401).json({
+                message: "Invalid email or password"
+            });
         }
+    } else {
+        res.status(401).json({
+            message: "Invalid email or password"
+        });
     }
+
 })
 
 const logoutCurrentUser = asyncHandler(async (req, res) => {
@@ -105,14 +120,13 @@ const updateCurrentUserProfile = asyncHandler(async (req, res) => {
 
         res.status(200).json({
             message: "User updated successfully",
-            user: {
+            data: {
                 _id: updatedUser._id,
                 username: updatedUser.username,
                 email: updatedUser.email,
                 isAdmin: updatedUser.isAdmin
             }
         });
-
     } else {
         res.status(401);
         throw new Error("User not found.")
