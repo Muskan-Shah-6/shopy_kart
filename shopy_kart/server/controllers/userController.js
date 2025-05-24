@@ -172,4 +172,25 @@ const getUserById = asyncHandler(async (req, res) => {
     }
 
 })
-export { createUser, loginUser, logoutCurrentUser, getAllusers, getCurrentUserProfile, updateCurrentUserProfile, deleteUserById, getUserById };
+
+const updateUserById = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id)
+    if (user) {
+        user.username = req.body.username || user.username,
+        user.email = req.body.email || user.email
+
+        const updateUserByAdmin = await user.save()
+
+        res.status(200).json({
+            message: "User updated by admin successfully",
+            data: {
+                _id: updateUserByAdmin._id,
+                username: updateUserByAdmin.username,
+                email: updateUserByAdmin.email,
+                isAdmin: updateUserByAdmin.isAdmin
+            }
+        })
+    }
+
+})
+export { createUser, loginUser, logoutCurrentUser, getAllusers, getCurrentUserProfile, updateCurrentUserProfile, deleteUserById, getUserById, updateUserById };
