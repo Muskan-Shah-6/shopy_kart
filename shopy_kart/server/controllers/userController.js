@@ -171,6 +171,8 @@ const getUserById = asyncHandler(async (req, res) => {
 
 })
 
+
+
 const updateUserById = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id)
     if (user) {
