@@ -3,12 +3,13 @@ import { AiOutlineHome, AiOutlineShopping, AiOutlineLogin, AiOutlineUserAdd, AiO
 import { FaHeart } from 'react-icons/fa'
 import { Link, useNavigate } from 'react-router-dom'
 import './Navigation.css'
-import { useSelector , useDispatch  } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useLoginMutation } from '../../redux/api/usersApiSlice'
 import { logout } from '../../redux/features/auth/authSlice'
 
 const Navigation = () => {
-const {userInfo} = useSelector(state => state.auth)
+    const { userInfo } = useSelector((state) => state.auth);
+    console.log("The user info is :", userInfo);
 
     const [dropdownOpen, setDropdownOpen] = useState(false)
     const [showSidebar, setShowSidebar] = useState(false)
@@ -28,14 +29,14 @@ const {userInfo} = useSelector(state => state.auth)
     const dispatch = useDispatch()
     const navigate = useNavigate()
 
-    const {logoutApiCall} = useLoginMutation()
+    const { logoutApiCall } = useLoginMutation()
 
-    const logoutHandler = async () =>{
-        try{
+    const logoutHandler = async () => {
+        try {
             await logoutApiCall().unwrap();
             dispatch(logout());
             navigate("/login")
-        }catch(error){
+        } catch (error) {
             console.log(error)
         }
     }
@@ -67,7 +68,13 @@ const {userInfo} = useSelector(state => state.auth)
 
                 <div className="relative">
                     <button onClick={toggleDropdown} className='flex items-center text-gray-800 focus:outline-none'>
-                        {userInfo ? <span className='text-white'>{userInfo.username}</span> : (<></>)}
+
+                        {userInfo ? (
+                            <span className="text-white">{userInfo.data?.username 
+                            }</span>
+                        ) : (
+                            <></>
+                        )}
                     </button>
                 </div>
                 <ul>
